@@ -67,7 +67,8 @@ fi
 
 # Removing files from remote host path
 echo "===> Removing all $numFiles files inside $hostPath"
-for i in $(seq 1 $numFiles)
+for i in $(seq 1 $numFiles)  # Use this loop in case all files exist
+#for i in $(seq 270 5000)  # Use this loop in case some files do not exist (alter the loop range)
 do
    echo "    Removing file : output_${i}.root"
    xrdfs $hostIP rm ${hostPath}/output_${i}.root
