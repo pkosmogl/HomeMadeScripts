@@ -41,7 +41,8 @@ for i in `ls -v *.sub`; do condor_submit $i; done
 6. Once all jobs have finished you can hadd the individual `.root` files into a final one  
 that will represent the hole run.
 7. Each job also produces a KMTF file. You can run ontop of them the `KMTFstatisticsCalculator.sh`  
-script to calculate the missmatch fractions for the hole run.
+script to calculate the missmatch fractions for the hole run.  
+Make sure that you point `KMTFstatisticsCalculator.sh` script to the location of the KMTF files.
 
 
 [1] [Panos github page](https://github.com/panoskatsoulis/ExternalCMSSW/tree/CMSSW_11_2_X)
