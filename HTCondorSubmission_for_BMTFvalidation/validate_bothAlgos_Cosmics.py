@@ -143,7 +143,8 @@ process.validation.muonsData = cms.InputTag("bmtfDigis:"+legacyTag)
 process.validation.doEfficiency = cms.bool(False)
 
 process.validation2 = process.validation.clone(
-    system = cms.string("KMTF_run"+run+"_"+str(events)+"Events_"+lumiBegin+"LS_"+lumiEnd+"LS"),
+    system = cms.string("KMTF"),
+    system2 = cms.string("_run"+run+"_"+str(events)+"Events_"+lumiBegin+"LS_"+lumiEnd+"LS"),
     muonsData = cms.InputTag("bmtfDigis:"+kalmanTag),
     muonsEmu = cms.InputTag("simKBmtfDigis:BMTF")
     )
