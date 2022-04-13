@@ -11,9 +11,12 @@ For this reason the scripts given here provide a way to make parallel job submis
 the HTCondor. Each job runs on a differen LS range and on a subsample of the overall number of  
 events.
 
-For this example the `validate_bothAlgos_Cosmics.py` [1] file will be used,  
+For this example the `ExternalCMSSW/MuonStudy/test/validate_bothAlgos_Cosmics.py` [1] file will be used,  
 which is designed to run on Cosmics runs. Some lines inside the `.py` have been changed,  
-compared to the original one, in order to differentiate the produced output files of each job submission.
+compared to the original one, in order to differentiate the produced output files of each job submission.  
+Additionally `ExternalCMSSW/MuonStudy/src/Validation_new.cc` also is changed a bit to make sure that the  
+directory that is created in the output `.root` files is the same, so that the hadd command works out  
+of the box.
 
 ## The workflow
  1. Open the `.py` file and make sure that you fix the variable `dataset` and `gTag` to the  
