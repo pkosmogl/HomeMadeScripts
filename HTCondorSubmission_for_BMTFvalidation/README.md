@@ -22,10 +22,10 @@ and `122X_dataRun3_HLT_v4` respectively.
 ***Note*** that `events`, `run`, `lumiBegin`, `lumiEnd` variables will be set later in an automatic  
 manner through the use of the `cloneFactory.sh` script.
 2. Open `submit.sub` script and make sure that the `Home_path` variable is set to the output of your  
-`$HOME` path.  
-Initialize you grid certificate.  
+systems `$HOME` variable.  
+Initialize your grid certificate.  
 Find and move your `x509up_u` proxy file to a directory like `$HOME/private`.  
-Then set the `Proxy_path` variables to point to this file. Make sure that you give the full path.  
+Then set the `Proxy_path` variable to point to this file. Make sure that you give the full path.  
 The `+JobFlavour` variable will be set by the `cloneFactory.sh` script.  
 3. The `afspath` in `exe.sh` is set by the `cloneFactory.sh` script.  
 4. Create a desired directory where the output files will be saved.  
