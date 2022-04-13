@@ -28,19 +28,19 @@ Find and move your `x509up_u` proxy file to a directory like `$HOME/private`.
 Then set the `Proxy_path` variables to point to this file. Make sure that you give the full path.  
 The `+JobFlavour` variable will be set by the `cloneFactory.sh` script.  
 3. The `afspath` in `exe.sh` is set by the `cloneFactory.sh` script.  
-- Create a desired directory where the output files will be saved.  
+4. Create a desired directory where the output files will be saved.  
 Inside `cloneFactory.sh` this directory is set to `Run_348776_validationDate_06_April_2022`.  
 Find and replace inside `cloneFactory.sh` all occurrences of the above directory with the one you just created.  
 You are ready to run `cloneFactory.sh` script!  
 It will create one copy of the `validate_bothAlgos_Cosmics.py`, `exe.sh` and `submit.sub`  
 for each job that you want to submit to HTCondor.  
-4. Loop over all sub files that were created and submit them to HTCondor, like:
+5. Loop over all sub files that were created and submit them to HTCondor, like:
 ```bash
 for i in `ls -v *.sub`; do condor_submit $i; done
 ```
-5. Once all jobs have finished you can hadd the individual `.root` files into a final one  
+6. Once all jobs have finished you can hadd the individual `.root` files into a final one  
 that will represent the hole run.
-6. Each job also produces a KMTF file. You can run ontop of them the `KMTFstatisticsCalculator.sh`  
+7. Each job also produces a KMTF file. You can run ontop of them the `KMTFstatisticsCalculator.sh`  
 script to calculate the missmatch fractions for the hole run.
 
 
