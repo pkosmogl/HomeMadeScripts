@@ -1,0 +1,62 @@
+##################################################################
+# Script to be executed and is set from the run_condor.sh script #
+##################################################################
+executable            		= exe.sh
+
+#############################################################
+# How many times to retry the job if success_exit_code <> 0 #
+#############################################################
+#max_retries = 3
+
+##########################################################  
+# Definition of output,error,log files (The directories  # 
+# output,error and log should have already been created) #
+##########################################################
+output                		= output/output.out
+error                 		= error/error.err
+log                   		= log/log.log
+
+########################################
+# Give access to proxy X509_USER_PROXY #
+########################################
+Proxy_path                 = /afs/cern.ch/user/p/pkosmogl/private/x509up_u134421
+
+#########################################
+# Pass arguments to the executable file #
+#########################################
+Home_path                  = /afs/cern.ch/user/p/pkosmogl
+arguments                  = $(Proxy_path) $(Home_path)
+
+######################
+# Transferring files #
+######################
+#should_transfer_files       = YES
+
+######################################################################################
+# Input files need to be transferred to the node (user's argument for run_condor.sh) #
+######################################################################################
+#transfer_input_files 		= $(Proxy_path)
+
+###########################################################
+# Output files to the submit machine (Default is ON_EXIT) #
+# ON_SUCCESS means if the success_exit_code=0             #
+###########################################################
+#when_to_transfer_output    = ON_SUCCESS
+#when_to_transfer_output     = ON_EXIT
+
+#################################################################
+# Job flavor definition (user's argument for run_condor.sh):    #
+# espresso     = 20 minutes                                     # 
+# microcentury = 1 hour                                         #
+# longlunch    = 2 hour                                         #
+# workday      = 8 hour                                         #
+# tomorrow     = 1 day                                          #
+# testmatch    = 3 days                                         #
+# nextweek     = 1 week                                         #
+#################################################################
++JobFlavour           		= "flavour"
+
+######################################################################
+# Number of jobs to be submitted (user's argument for run_condor.sh) #
+######################################################################
+queue
