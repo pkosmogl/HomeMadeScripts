@@ -4,16 +4,16 @@ We want to perform validation checks of certain runs in the context of BMTF.
 The validation is usually performed by interactively running a `.py` file via `cmsRun`,  
 like `cmsRun thePythonFile.py`.  
 
-If the run inquestion contains a lot of events, of the order of `500,000` or more,  
+If the run in question contains a lot of events, of the order of `500,000` or more,  
 running only one job on all available events is time consuming and prone to machine crashes.
 
-For this reason the scripts given here provide a way to make parallel job submissions using  
+For this reason the scripts given here provide a way to make parallel job submission using  
 the HTCondor. Each job runs on a differen LS range and on a subsample of the overall number of  
 events.
 
 For this example the `validate_bothAlgos_Cosmics.py` [1] file will be used,  
-which is designed to run on Cosmics runs. Some lines inside the `.py` found here have been  
-changed in order to differentiate the produced output files of each job submission.
+which is designed to run on Cosmics runs. Some lines inside the `.py` have been changed,  
+compared to the original one, in order to differentiate the produced output files of each job submission.
 
 ## The workflow
  1. Open the `.py` file and make sure that you fix the variable `dataset` and `gTag` to the  
