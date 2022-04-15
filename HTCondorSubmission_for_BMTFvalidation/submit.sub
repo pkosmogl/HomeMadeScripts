@@ -1,6 +1,6 @@
-##################################################################
-# Script to be executed and is set from the run_condor.sh script #
-##################################################################
+#########################
+# Script to be executed #
+#########################
 executable            		= exe.sh
 
 #############################################################
@@ -12,51 +12,56 @@ executable            		= exe.sh
 # Definition of output,error,log files (The directories  # 
 # output,error and log should have already been created) #
 ##########################################################
-output                		= output/output.out
-error                 		= error/error.err
-log                   		= log/log.log
+tempName                   = $SUBSTR(filename, 27, 34)
 
-########################################
-# Give access to proxy X509_USER_PROXY #
-########################################
+output                		= output/output_$(tempName).out
+error                 		= error/error_$(tempName).err
+log                   		= log/log_$(tempName).log
+
+#############################################
+# Give access to proxy X509_USER_PROXY file #
+#############################################
 Proxy_path                 = /afs/cern.ch/user/p/pkosmogl/private/x509up_u134421
 
 #########################################
 # Pass arguments to the executable file #
 #########################################
 Home_path                  = /afs/cern.ch/user/p/pkosmogl
-arguments                  = $(Proxy_path) $(Home_path)
+Run_path                   = /afs/cern.ch/work/p/pkosmogl/private/BMTF_Service/CMSSW_12_2_3_patch1/src/ExternalCMSSW/MuonStudy/test/Run_test
+arguments                  = $(filename) $(Home_path) $(Proxy_path) $(Run_path)
 
 ######################
 # Transferring files #
 ######################
 #should_transfer_files       = YES
 
-######################################################################################
-# Input files need to be transferred to the node (user's argument for run_condor.sh) #
-######################################################################################
-#transfer_input_files 		= $(Proxy_path)
+##################################################
+# Input files need to be transferred to the node #
+##################################################
+#transfer_input_files 		=
 
 ###########################################################
 # Output files to the submit machine (Default is ON_EXIT) #
 # ON_SUCCESS means if the success_exit_code=0             #
 ###########################################################
 #when_to_transfer_output    = ON_SUCCESS
-#when_to_transfer_output     = ON_EXIT
+#when_to_transfer_output    = ON_EXIT
 
-#################################################################
-# Job flavor definition (user's argument for run_condor.sh):    #
-# espresso     = 20 minutes                                     # 
-# microcentury = 1 hour                                         #
-# longlunch    = 2 hour                                         #
-# workday      = 8 hour                                         #
-# tomorrow     = 1 day                                          #
-# testmatch    = 3 days                                         #
-# nextweek     = 1 week                                         #
-#################################################################
-+JobFlavour           		= "flavour"
+#############################
+# Job flavor definition     #
+# espresso     = 20 minutes #
+# microcentury = 1 hour     #
+# longlunch    = 2 hour     #
+# workday      = 8 hour     #
+# tomorrow     = 1 day      #
+# testmatch    = 3 days     #
+# nextweek     = 1 week     #
+#############################
++JobFlavour           		= "espresso"
 
-######################################################################
-# Number of jobs to be submitted (user's argument for run_condor.sh) #
-######################################################################
-queue
+################################################################################################################
+# Number of jobs to be submitted, submits a job for every python file found in the current directory           #
+# then the name of the python file is passed to the filename variable                                          #
+# https://htcondor.readthedocs.io/en/latest/users-manual/submitting-a-job.html#sample-submit-description-files #
+################################################################################################################
+queue filename matching files *.py
