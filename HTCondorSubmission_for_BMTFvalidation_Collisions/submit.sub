@@ -1,0 +1,85 @@
+#########################
+# Script to be executed #
+#########################
+executable            		= exe.sh
+
+#############################################################
+# How many times to retry the job if success_exit_code <> 0 #
+#############################################################
+#max_retries = 3
+
+##########################################################  
+# Definition of output,error,log files (The directories  # 
+# output,error and log should have already been created) #
+##########################################################
+output                		= output/output_$(lsBegin)LS_$(lsEnd)LS.out
+error                 		= error/error_$(lsBegin)LS_$(lsEnd)LS.err
+log                   		= log/log_$(lsBegin)LS_$(lsEnd)LS.log
+
+#############################################
+# Give access to proxy X509_USER_PROXY file #
+#############################################
+Proxy_path                 = /afs/cern.ch/user/p/pkosmogl/private/x509up_u134421
+
+#########################################
+# Pass arguments to the executable file #
+#########################################
+Home_path                  = /afs/cern.ch/user/p/pkosmogl
+Run_path                   = /afs/cern.ch/work/p/pkosmogl/private/BMTF_Service/CMSSW_12_3_5_patch1/src/ExternalCMSSW/MuonStudy/test/Run_353689_validationDate_22_June_2022
+arguments                  = $(Home_path) $(Proxy_path) $(Run_path) $(lsBegin) $(lsEnd)
+
+######################
+# Transferring files #
+######################
+#should_transfer_files       = YES
+
+##################################################
+# Input files need to be transferred to the node #
+##################################################
+#transfer_input_files 		=
+
+###########################################################
+# Output files to the submit machine (Default is ON_EXIT) #
+# ON_SUCCESS means if the success_exit_code=0             #
+###########################################################
+#when_to_transfer_output    = ON_SUCCESS
+#when_to_transfer_output    = ON_EXIT
+
+#############################
+# Job flavor definition     #
+# espresso     = 20 minutes #
+# microcentury = 1 hour     #
+# longlunch    = 2 hour     #
+# workday      = 8 hour     #
+# tomorrow     = 1 day      #
+# testmatch    = 3 days     #
+# nextweek     = 1 week     #
+#############################
++JobFlavour           		= "workday"
+
+################################################################################################################
+# Number of jobs to be submitted, submits a job for each lumisection range by parsing the lsBegin lsEnd        #
+# variables in the cmsRun command inside the exe.sh script                                                     #
+# https://htcondor.readthedocs.io/en/latest/users-manual/submitting-a-job.html#sample-submit-description-files #
+################################################################################################################
+queue lsBegin, lsEnd from (
+   1, 10
+   11, 20
+   21, 30
+   31, 40
+   41, 50
+   51, 60
+   61, 70
+   71, 80
+   81, 90
+   91, 100
+   101, 110
+   111, 120
+   121, 130
+   131, 140
+   141, 150
+   151, 160
+   161, 170
+   171, 180
+   181, 192
+)
