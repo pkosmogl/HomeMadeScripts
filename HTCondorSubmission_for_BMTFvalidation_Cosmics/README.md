@@ -16,7 +16,6 @@ After successfully following the instructions in [1] to install the BMTF validat
 one should first change a few lines of code to enable parsing different output names among the  
 job submissions and thus avoid overwriting issues.
 
- - ***In the case of Cosmics runs:***  
 First go to `$CMSSW_BASE/src/ExternalCMSSW/MuonStudy/test/validate_bothAlgos_Cosmics.py` file.   
 1. Comment L34 (`print files`) and L35 (`print das_query`).  
 2. Change L102 to:  
@@ -49,7 +48,7 @@ desc.add<std::string>("system2", "");
  1. **Clone the repositroy:**  
  Clone this repository inside `$CMSSW_BASE/src/ExternalCMSSW/MuonStudy/test`, so you can gain  
  access to the scripts.  
- 2. **Prepare python file clones**  
+ 2. **Prepare python file clones:**  
  Run `cloneFactory.sh` script as `./cloneFactory.sh`. It promts the user for some arguments.  
  The arguments given in the `cloneFactory.sh` script will set some values for variables inside  
  the `validate_bothAlgos_Cosmics.py` file.  
@@ -69,7 +68,7 @@ at `25LS`, and the last python file will start at `126LS` and end at `150LS`. So
 Other variables like #events (`200000`), dataset (`/ExpressCosmics/Commissioning2022-Express-v1/FEVT`),  
 run number (`350174`) and global tag (`122X_dataRun3_HLT_v4`), remain the same for all python clone files.
 
-3. **Prepare submission file**  
+3. **Prepare submission file:**  
 Copy `exe.sh` and `submit.sub` scripts inside the newly created directory `Run_350174_validationDate_13_April_2022`  
 (`Run_350174_validationDate_13_April_2022` in the case of the above example).  
 First make sure that you initiate your grid certificate. Copy your proxy `x509up_u` file (usually found in  
@@ -77,7 +76,7 @@ First make sure that you initiate your grid certificate. Copy your proxy `x509up
 Open `submit.sub` and make sure to give the appropriate values to the `Proxy_path` (L24), `Home_path` (L29),  
 `Run_path` (L30) and `+JobFlavour` (L60) variables.  
 
-4. **Make job submissions**  
+4. **Make job submissions:**  
 Double check that the `submit.sub` and `exe.sh` are in the same directory as the clones of python files  
 you just created. Then run:
 ```bash
