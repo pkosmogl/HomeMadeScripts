@@ -1,8 +1,11 @@
-# HTCondor job submission for BMTF validation
+# HTCondor job submission for BMTF validation with Collisions
 ## Task
 We want to perform validation checks of certain runs in the context of BMTF.  
 The validation is usually performed by interactively running a `.py` file via `cmsRun`,  
-like `cmsRun thePythonFile.py`.  
+like  
+```bash
+cmsRun validate_bothAlgos_Collisions.py run=353689 events=250000 lumiBegin=$4 lumiEnd=$5 dataset=/JetHT/Run2022A-v1/RAW gTag=123X_dataRun3_HLT_v11
+```
 
 If the run in question contains a lot of events, of the order of `500,000` or more,  
 running only one job on all available events is time consuming and prone to machine crashes.
@@ -15,17 +18,46 @@ events.
 After successfully following the instructions in [1] to install the BMTF validation package,  
 one should first change a few lines of code to enable parsing different output names among the  
 job submissions and thus avoid overwriting issues.
-
- - ***In the case of Cosmics runs:***  
-First go to `$CMSSW_BASE/src/ExternalCMSSW/MuonStudy/test/validate_bothAlgos_Cosmics.py` file.   
-1. Comment L34 (`print files`) and L35 (`print das_query`).  
-2. Change L102 to:  
+  
+First go to `$CMSSW_BASE/src/ExternalCMSSW/MuonStudy/test/validate_bothAlgos_Collisions.py` file.  
+1. Add some additional lines after L54 `"Last run to process (for multiple queries).")`:  
 ```py
-fileName = cms.string('validation_run'+run+'_'+str(events if events >= 0 else 'all')+'Events_'+lumiBegin+'LS_'+lumiEnd+'LS.root')
+  args.register("lumiBegin", 10,
+                VarParsing.VarParsing.multiplicity.singleton,
+                VarParsing.VarParsing.varType.int,
+                "Lumisection to start.")
+  args.register("lumiEnd", 20,
+                VarParsing.VarParsing.multiplicity.singleton,
+                VarParsing.VarParsing.varType.int,
+                "Lumisection to end.")
 ```
-3. Add an additional line below L146 `system = cms.string("KMTF"),`:
+2. Change L86 to:  
 ```py
-system2 = cms.string("_run"+run+"_"+str(events)+"Events_"+lumiBegin+"LS_"+lumiEnd+"LS"),
+print("The L1TMuonBarrelRcd can be either fetched form CondDB or from the fakeParams script.")
+```
+3. Change L98,99 to:
+```py
+lumiBegin = args.lumiBegin
+lumiEnd = args.lumiEnd
+```
+4. Tip! You may need to change L125 to:  
+```py
+files += cms.untracked.vstring('root://eoscms//eos/cms'+_file.strip() for _file in query_out)
+```
+to read the files directly from `EOS`.  
+5. Change L153 to: `print (files)`  
+6. Change L155 to: `print (das_queries)`  
+7. Uncomment L164 and change it to:  
+```py
+lumisToProcess = cms.untracked.VLuminosityBlockRange(str(str(run)+':'+str(lumiBegin)+'-'+str(run)+':'+str(lumiEnd) if query_type == "single" else ''))
+```
+8. Change L199 to: 
+```py
++'_'+str(events if events >= 0 else 'all')+'Events_'+str(lumiBegin)+'LS_'+str(lumiEnd)+'LS.root')
+```
+9. Add an additional line below L233 `system = cms.string("KMTF"),`:
+```py
+system2 = cms.string("_run"+str(run)+"_"+str(events)+"Events_"+str(lumiBegin)+"LS_"+str(lumiEnd)+"LS"),
 ```
 
 Then go to `$CMSSW_BASE/src/ExternalCMSSW/MuonStudy/src/Validation_new.cc` file.  
@@ -46,40 +78,34 @@ desc.add<std::string>("system2", "");
 ***Note*** that the *lines* (L*) indicated above might change as new versions of the package arrive.
 
 ## The workflow
- 1. **Clone the repositroy:**  
- Clone this repository inside `$CMSSW_BASE/src/ExternalCMSSW/MuonStudy/test`, so you can gain  
- access to the scripts.  
- 2. **Prepare python file clones**  
- Run `cloneFactory.sh` script as `./cloneFactory.sh`. It promts the user for some arguments.  
- The arguments given in the `cloneFactory.sh` script will set some values for variables inside  
- the `validate_bothAlgos_Cosmics.py` file.  
- **Pay attention** to the Lumi Section arguments, as according to these the script will decide  
- how many clones (of the python file) to create.  
- Each clone has exactly the same set of variables (L20-L27) except that the lumi section range  
- changes according to the step that is provided in the argument of `cloneFactory.sh`.  
+1. **Clone the repositroy:**  
+Clone this repository inside `$CMSSW_BASE/src/ExternalCMSSW/MuonStudy/test`, so you can gain  
+access to the scripts.   
  
- ***Example***  
- ```bash
- ./cloneFactory.sh validate_bothAlgos_Cosmics.py 200000 /ExpressCosmics/Commissioning2022-Express-v1/FEVT 350174 122X_dataRun3_HLT_v4 1 25 151 Run_350174_validationDate_13_April_2022
- ```
-***Description***  
-The `cloneFactory.sh` will create 6 clones of `validate_bothAlgos_Cosmics.py` inside the newly created  
-directory `Run_350174_validationDate_13_April_2022`. The first python file will start from `1LS` and end  
-at `25LS`, and the last python file will start at `126LS` and end at `150LS`. So we have a step of `25LS`!  
-Other variables like #events (`200000`), dataset (`/ExpressCosmics/Commissioning2022-Express-v1/FEVT`),  
-run number (`350174`) and global tag (`122X_dataRun3_HLT_v4`), remain the same for all python clone files.
+2. **Prepare execution file:**  
+Change L8  
+```bash
+cmsRun validate_bothAlgos_Collisions.py run=353689 events=250000 lumiBegin=$4 lumiEnd=$5 dataset=/JetHT/Run2022A-v1/RAW gTag=123X_dataRun3_HLT_v11
+```
+so that it fits your needs. Above the job will be submitted for run `353689`, for `250000` events on the `/JetHT/Run2022A-v1/RAW` dataset  
+with global tag `123X_dataRun3_HLT_v11`. This `cmsRun` command will submit one job for each lumisection range indicated by the  
+`lumiBegin` and `lumiEnd` arguments. These arguments are passed from the submission file `submit.sh`.  
 
-3. **Prepare submission file**  
-Copy `exe.sh` and `submit.sub` scripts inside the newly created directory `Run_350174_validationDate_13_April_2022`  
-(`Run_350174_validationDate_13_April_2022` in the case of the above example).  
+3. **Prepare submission file:**  
+Create a directory inside `/test` called for example `Run_353689_validationDate_27_June_2022`.  
+Copy `exe.sh` and `submit.sub` scripts inside the newly created directory `Run_353689_validationDate_27_June_2022`   
 First make sure that you initiate your grid certificate. Copy your proxy `x509up_u` file (usually found in  
 `/tmp/x509up_u`) somewhere inside your home directory, like `/afs/cern.ch/user/<u>/<username>/private/`.  
-Open `submit.sub` and make sure to give the appropriate values to the `Proxy_path` (L24), `Home_path` (L29),  
-`Run_path` (L30) and `+JobFlavour` (L60) variables.  
+Open `submit.sub` and make sure to give the appropriate values to the `Proxy_path` (L22), `Home_path` (L27),  
+`Run_path` (L28), `+JobFlavour` (L58) variables.  
+Below L65 you need to specify the lumi section range in which is job will be submitted. Each row corresponds to a different submission  
+and the first number corresponds to the value passed down to the `lsBegin` variable while the second number corresponds to the value passed  
+down to the `lsEnd` variables.
 
-4. **Make job submissions**  
-Double check that the `submit.sub` and `exe.sh` are in the same directory as the clones of python files  
-you just created. Then run:
+4. **Make job submissions:**  
+You probably need to create the `log`, output` and `error` directories inside `/test/Run_353689_validationDate_27_June_2022`  
+for the output files of the job submissions.  
+Then submit your jobs by running:
 ```bash
 condor_submit submit.sub
 ```
