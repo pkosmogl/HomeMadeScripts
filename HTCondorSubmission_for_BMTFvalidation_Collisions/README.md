@@ -42,9 +42,13 @@ lumiEnd = args.lumiEnd
 ```
 4. Tip! You may need to change L125 to:  
 ```py
+files += cms.untracked.vstring('root://cmsxrootd.fnal.gov/'+_file.strip() for _file in query_out)
+```
+to read the files with another "protocol", or
+```py
 files += cms.untracked.vstring('root://eoscms//eos/cms'+_file.strip() for _file in query_out)
 ```
-to read the files directly from `EOS`.  
+to read the files directly from `EOS`. More tips may be found at [Twiki](https://twiki.cern.ch/twiki/bin/view/CMSPublic/CompOpsAAATroubleshootingGuide)  
 5. Change L153 to: `print (files)`  
 6. Change L155 to: `print (das_queries)`  
 7. Uncomment L164 and change it to:  
