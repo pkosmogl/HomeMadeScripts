@@ -4,7 +4,7 @@ We want to perform validation checks of certain runs in the context of BMTF.
 The validation is usually performed by interactively running a `.py` file via `cmsRun`,  
 like  
 ```bash
-cmsRun validate_bothAlgos_Collisions.py run=353689 events=250000 lumiBegin=$4 lumiEnd=$5 dataset=/JetHT/Run2022A-v1/RAW gTag=123X_dataRun3_HLT_v11
+cmsRun validate_bothAlgos_Collisions.py run=353689 events=250000 dataset=/JetHT/Run2022A-v1/RAW gTag=123X_dataRun3_HLT_v11
 ```
 
 If the run in question contains a lot of events, of the order of `500,000` or more,  
