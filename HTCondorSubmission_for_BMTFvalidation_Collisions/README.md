@@ -115,7 +115,7 @@ and the first number corresponds to the value passed down to the `lsBegin` varia
 passed down to the `lsEnd` variables.
 
 4. **Make job submissions:**  
-You probably need to create the `log`, output` and `error` directories inside `/test/Run_353689_validationDate_27_June_2022`  
+You probably need to create the `log`, `output` and `error` directories inside `/test/Run_353689_validationDate_27_June_2022`  
 for the output files of the job submissions.  
 Then submit your jobs by running:
 ```bash
