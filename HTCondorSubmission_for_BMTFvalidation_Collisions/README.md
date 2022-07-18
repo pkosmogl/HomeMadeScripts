@@ -20,7 +20,15 @@ one should first change a few lines of code to enable parsing different output n
 job submissions and thus avoid overwriting issues.
   
 First go to `$CMSSW_BASE/src/ExternalCMSSW/MuonStudy/test/validate_bothAlgos_Collisions.py` file.  
-1. Add some additional lines after L54 `"Last run to process (for multiple queries).")`:  
+1. Change L27 to:
+```py
+args.register("legacyTag", "BMTF2",
+```
+2. Change L31 to:
+```py
+args.register("kalmanTag", "BMTF",
+```
+3. Add some additional lines after L54 `"Last run to process (for multiple queries).")`:  
 ```py
   args.register("lumiBegin", 10,
                 VarParsing.VarParsing.multiplicity.singleton,
@@ -31,16 +39,16 @@ First go to `$CMSSW_BASE/src/ExternalCMSSW/MuonStudy/test/validate_bothAlgos_Col
                 VarParsing.VarParsing.varType.int,
                 "Lumisection to end.")
 ```
-2. Change L86 to:  
+4. Change L86 to:  
 ```py
 print("The L1TMuonBarrelRcd can be either fetched form CondDB or from the fakeParams script.")
 ```
-3. Change L98,99 to:
+5. Change L98,99 to:
 ```py
 lumiBegin = args.lumiBegin
 lumiEnd = args.lumiEnd
 ```
-4. Tip! You may need to change L125 to:  
+6. Tip! You may need to change L125 to:  
 ```py
 files += cms.untracked.vstring('root://cmsxrootd.fnal.gov/'+_file.strip() for _file in query_out)
 ```
@@ -49,17 +57,17 @@ to read the files with another "protocol", or
 files += cms.untracked.vstring('root://eoscms//eos/cms'+_file.strip() for _file in query_out)
 ```
 to read the files directly from `EOS`. More tips may be found at [Twiki](https://twiki.cern.ch/twiki/bin/view/CMSPublic/CompOpsAAATroubleshootingGuide)  
-5. Change L153 to: `print (files)`  
-6. Change L155 to: `print (das_queries)`  
-7. Uncomment L164 and change it to:  
+7. Change L153 to: `print (files)`  
+8. Change L155 to: `print (das_queries)`  
+9. Uncomment L164 and change it to:  
 ```py
 lumisToProcess = cms.untracked.VLuminosityBlockRange(str(str(run)+':'+str(lumiBegin)+'-'+str(run)+':'+str(lumiEnd) if query_type == "single" else ''))
 ```
-8. Change L199 to: 
+10. Change L199 to: 
 ```py
 +'_'+str(events if events >= 0 else 'all')+'Events_'+str(lumiBegin)+'LS_'+str(lumiEnd)+'LS.root')
 ```
-9. Add an additional line below L233 `system = cms.string("KMTF"),`:
+11. Add an additional line below L233 `system = cms.string("KMTF"),`:
 ```py
 system2 = cms.string("_run"+str(run)+"_"+str(events)+"Events_"+str(lumiBegin)+"LS_"+str(lumiEnd)+"LS"),
 ```
@@ -103,8 +111,8 @@ First make sure that you initiate your grid certificate. Copy your proxy `x509up
 Open `submit.sub` and make sure to give the appropriate values to the `Proxy_path` (L22), `Home_path` (L27),  
 `Run_path` (L28), `+JobFlavour` (L58) variables.  
 Below L65 you need to specify the lumi section range in which is job will be submitted. Each row corresponds to a different submission  
-and the first number corresponds to the value passed down to the `lsBegin` variable while the second number corresponds to the value passed  
-down to the `lsEnd` variables.
+and the first number corresponds to the value passed down to the `lsBegin` variable while the second number corresponds to the value  
+passed down to the `lsEnd` variables.
 
 4. **Make job submissions:**  
 You probably need to create the `log`, output` and `error` directories inside `/test/Run_353689_validationDate_27_June_2022`  
